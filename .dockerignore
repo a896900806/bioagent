@@ -1,0 +1,62 @@
+# 版本控制
+.git
+.gitignore
+.github
+
+# Python环境
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env.local
+.env.development
+.env.test
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# 虚拟环境
+.venv
+venv/
+ENV/
+env/
+conda-env/
+
+# 开发工具和IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# 大型数据文件（保留chroma目录结构）
+/data/*
+!/data/chroma/
+/data/chroma/*
+!/data/chroma/.gitkeep
+
+# 日志和缓存
+logs/
+*.log
+.cache/
+
+# 构建和文档（保留README.md）
+dist/
+build/
+docs/
+*.md
+!README.md
+
+# Docker相关（已移至docker目录，不需要在此排除）
+# Dockerfile*
+# docker-compose*
+# .dockerignore
+
+# 其他
+*.bak
+*.tmp
+*.temp
+.ipynb_checkpoints/ 

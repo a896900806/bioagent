@@ -1,0 +1,17 @@
+fastapi==0.111.0
+uvicorn==0.29.0
+python-dotenv==1.0.1
+pydantic-settings==2.9.1
+pydantic==2.6.1
+langgraph==0.1.5
+langchain==0.3.25
+langchain-openai==0.3.24
+langchain-community==0.3.25
+langchain-text-splitters==0.3.8
+openai==1.88.0
+langchain-ollama==0.0.1
+chromadb==0.4.22
+tqdm==4.66.4
+sqlite-utils==3.35.1
+httpx-sse==0.4.0
+jiter==0.10.0 

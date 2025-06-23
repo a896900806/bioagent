@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  api:
+    image: python:3.11-slim
+    env_file: ../.env
+    ports: ["8000:8000"]
+    volumes: ["..:/app"]
+    working_dir: /app
+    command: bash -c "pip install --no-cache-dir -r requirements.txt && uvicorn app.api.routes:app --host 0.0.0.0 --port 8000" 

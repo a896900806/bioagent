@@ -1,0 +1,24 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# 安装开发工具
+RUN apt-get update && apt-get install -y \
+    git \
+    sqlite3 \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装Python依赖
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 安装开发依赖
+RUN pip install --no-cache-dir \
+    pytest \
+    black \
+    flake8 \
+    jupyter
+
+# 保持容器运行
+CMD ["bash"] 
