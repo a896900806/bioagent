@@ -30,7 +30,7 @@ def intent_classifier_node(state: Dict[str, Any]) -> Dict[str, Any]:
     
     # 构建意图分类提示
     intent_prompt = f"""分析以下中文查询，并确定其最适合由哪种系统处理。
-
+    
 查询: "{query}"
 
 可能的分类:

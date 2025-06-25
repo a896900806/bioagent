@@ -8,8 +8,12 @@ class Settings(BaseSettings):
     database_url: str
     vector_db_path: str
     
+    # Qwen配置（可选）
+    qwen_api_key: Optional[str] = "sk-fecbf7d2a3554509b3dc02144692eb95"
+    qwen_base_url: Optional[str] = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    
     # 模型配置
-    model_provider: Literal["openai", "ollama"] = "openai"
+    model_provider: Literal["openai", "ollama", "qwen"] = "openai"
     model_name: str = "gpt-4o"  # 默认使用OpenAI的gpt-4o
     ollama_base_url: Optional[str] = "http://localhost:11434"  # Ollama的默认URL（可选）
     

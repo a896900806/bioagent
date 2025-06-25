@@ -14,4 +14,5 @@ chromadb==0.4.22
 tqdm==4.66.4
 sqlite-utils==3.35.1
 httpx-sse==0.4.0
-jiter==0.10.0 
+jiter==0.10.0
+zhipuai==2.0.1 

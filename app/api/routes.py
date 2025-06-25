@@ -44,7 +44,7 @@ def get_gse_by_accession(accession: str):
 
 class QueryRequest(BaseModel):
     query: str
-    model_provider: Optional[Literal["openai", "ollama"]] = None
+    model_provider: Optional[Literal["openai", "ollama", "qwen"]] = None
     model_name: Optional[str] = None
     thread_id: Optional[str] = None
 
@@ -71,14 +71,29 @@ def query(request: QueryRequest):
         raise HTTPException(status_code=400, detail="查询不能为空")
     
     try:
-        # 如果请求了ollama但没有ollama，使用openai
+        # 检查请求的模型提供商是否可用
         model_provider = request.model_provider
+        
+        # 如果请求了ollama但没有ollama，使用openai
         if model_provider == "ollama":
             try:
                 import langchain_community.llms.ollama
                 print("Ollama模块可用，尝试使用Ollama")
             except ImportError:
                 print("Ollama模块不可用，自动切换到OpenAI")
+                model_provider = "openai"
+        
+        # 如果请求了qwen但没有qwen配置，使用openai
+        elif model_provider == "qwen":
+            try:
+                from langchain_openai import ChatOpenAI
+                if not (settings.qwen_api_key and settings.qwen_base_url):
+                    print("Qwen API密钥未配置，自动切换到OpenAI")
+                    model_provider = "openai"
+                else:
+                    print("Qwen模块可用，尝试使用Qwen")
+            except ImportError:
+                print("Qwen模块不可用，自动切换到OpenAI")
                 model_provider = "openai"
         
         # 获取或生成thread_id
@@ -201,6 +216,15 @@ def get_available_models():
     except ImportError:
         ollama_available = False
     
+    # 检查Qwen是否可用
+    qwen_available = False
+    try:
+        from langchain_openai import ChatOpenAI
+        if settings.qwen_api_key and settings.qwen_base_url:
+            qwen_available = True
+    except ImportError:
+        qwen_available = False
+    
     return {
         "providers": [
             {
@@ -212,6 +236,11 @@ def get_available_models():
                 "name": "ollama",
                 "models": ["llama3", "mistral", "bge-m3"],
                 "available": ollama_available
+            },
+            {
+                "name": "qwen",
+                "models": ["qwen-max", "qwen-turbo", "qwen-plus"],
+                "available": qwen_available
             }
         ],
         "default_provider": settings.model_provider,

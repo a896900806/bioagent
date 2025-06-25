@@ -5,10 +5,10 @@ import traceback
 
 def get_llm(model_provider=None, model_name=None) -> Any:
     """
-    获取LLM实例，支持OpenAI和Ollama
+    获取LLM实例，支持OpenAI、Ollama和Qwen
     
     Args:
-        model_provider: 模型提供商，可选 'openai' 或 'ollama'
+        model_provider: 模型提供商，可选 'openai'、'ollama' 或 'qwen'
         model_name: 模型名称
         
     Returns:
@@ -78,6 +78,60 @@ def get_llm(model_provider=None, model_name=None) -> Any:
                 )
         except ImportError:
             print("Ollama库未安装，回退到OpenAI模型")
+            
+            # 回退到OpenAI
+            api_key = settings.openai_api_key
+            api_version = settings.api_version
+            azure_endpoint = settings.azure_endpoint
+            
+            llm = AzureChatOpenAI(
+                model_name=settings.model_name, 
+                temperature=0,
+                openai_api_key=api_key,
+                azure_endpoint=azure_endpoint,
+                openai_api_version=api_version
+            )
+    
+    elif model_provider == "qwen":
+        try:
+            # 仅在需要时导入Qwen相关库
+            from langchain_openai import ChatOpenAI
+            
+            # 获取Qwen配置
+            qwen_api_key = settings.qwen_api_key
+            qwen_base_url = settings.qwen_base_url
+            
+            print(f"使用Qwen模型")
+            
+            # 尝试创建Qwen实例
+            try:
+                llm = ChatOpenAI(
+                    model=model_name or "qwen-max",  # 默认使用qwen-max
+                    api_key=qwen_api_key,
+                    base_url=qwen_base_url,
+                    temperature=0
+                )
+                # 测试Qwen是否可用
+                llm.invoke("测试")
+            except Exception as e:
+                print(f"Qwen服务不可用: {str(e)}")
+                print(f"详细错误: {traceback.format_exc()}")
+                print("回退到OpenAI模型")
+                
+                # 回退到OpenAI
+                api_key = settings.openai_api_key
+                api_version = settings.api_version
+                azure_endpoint = settings.azure_endpoint
+                
+                llm = AzureChatOpenAI(
+                    model_name=settings.model_name, 
+                    temperature=0,
+                    openai_api_key=api_key,
+                    azure_endpoint=azure_endpoint,
+                    openai_api_version=api_version
+                )
+        except ImportError:
+            print("OpenAI库未安装，回退到OpenAI Azure模型")
             
             # 回退到OpenAI
             api_key = settings.openai_api_key
